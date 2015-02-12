@@ -1,0 +1,628 @@
+<?php
+
+/**
+ * Implements hook_entity_info().
+ */
+function address_book_entity_info() {
+  $info['address_book'] = array(
+    'label' => t('Address book Entity'),
+    'controller class' => 'AddressBookController',
+    'base table' => 'address_book',
+    'uri callback' => 'address_book_uri',
+    'fieldable' => TRUE,
+    'entity keys' => array(
+      'id' => 'basic_id',
+      'bundle' => 'bundle_type',
+    ),
+    'bundle keys' => array(
+      'bundle' => 'bundle_type',
+    ),
+    'static cache' => TRUE,
+    'bundles' => array(
+      'address_book' => array(
+        'label' => 'First bundle',
+        'admin' => array(
+          'path' => 'admin/structure/address_book/manage',
+          'access arguments' => array('administer address_book entities'),
+        ),
+      ),
+    ),
+    'view modes' => array(
+      'tweaky' => array(
+        'label' => t('Tweaky'),
+        'custom settings' => FALSE,
+      ),
+    ),
+    'module' => 'address_book'
+
+  );
+
+  return $info;
+}
+
+/**
+ *Entity load function for Adress book entity
+ *@param $basic_id
+ *@param $reset
+ *@return entity object if $basic_id not Null
+ */
+
+function address_book_load($basic_id = NULL, $reset = FALSE) {
+  $basic_ids = (isset($basic_id) ? array($basic_id) : array());
+  $basic = address_book_load_multiple($basic_ids, array(), $reset);
+  return $basic ? reset($basic) : FALSE;
+}
+
+function address_book_load_multiple($basic_ids = FALSE, $conditions = array(), $reset = FALSE) {
+  return entity_load('address_book', $basic_ids, $conditions, $reset);
+}
+
+/**
+ * Implements the uri callback.
+ * @param $book
+ * @return entity path
+ */
+function address_book_uri($book) {
+  return array(
+    'path' => 'address-book/book/' . $book->book_id,
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function address_book_menu() {
+  $items['address-books'] = array(
+    'title' => 'Address Books',
+    'page callback' => 'address_book_info_page',
+    'access arguments' => array('view any address books entity'),
+  );
+  $items['operations'] = array(
+    'title' => 'Operations entity table',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('address_book_table_form'),
+    'access arguments' => array('view any address books entity'),
+  );
+  $items['admin/structure/address_book/manage'] = array(
+    'title' => 'Administer address_book entity type',
+    'page callback' => 'address_book_list_entities',
+    'access arguments' => array('administer address_book entities'),
+  );
+
+  $items['admin/structure/address_book/manage/add'] = array(
+    'title' => 'Add an Address book Entity',
+    'page callback' => 'address_book_add',
+    'access arguments' => array('create address_book entities'),
+    'type' => MENU_LOCAL_ACTION,
+  );
+  $items['admin/structure/entity_example_basic/manage/list'] = array(
+    'title' => 'List',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  $items['address-book/book/%address_book'] = array(
+    'title callback' => 'address_book_title',
+    'title arguments' => array(2),
+    'page callback' => 'address_book_view',
+    'page arguments' => array(2),
+    'access arguments' => array('view any address_book entity'),
+  );
+  $items['address-book/book/%address_book/view'] = array(
+    'title' => 'View',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+  $items['address-book/book/%address_book/edit'] = array(
+    'title' => 'Edit',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('address_book_form', 2),
+    'access arguments' => array('edit any entity_example_basic entity'),
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  return $items;
+}
+
+
+/**
+ * Basic information for the page.
+ */
+function address_book_info_page() {
+  $content['preface'] = array(
+    '#type' => 'item',
+    '#markup' => t('The entity example provides a simple example entity.'),
+  );
+  if (user_access('administer address_book entities')) {
+    $content['preface']['#markup'] = t('You can administer these and add fields and change the view !link.', array('!link' => l(t('here'), 'admin/structure/address_book/manage')));
+  }
+  $content['table'] = address_book_list_entities();
+
+  return $content;
+}
+
+/**
+ * @return array table
+ */
+
+function address_book_list_entities() {
+  $content = array();
+  /*if(!$admin_access = user_access('administer nodes')){*/
+  $entities = address_book_load_multiple();
+  if (!empty($entities)) {
+    foreach ($entities as $entity) {
+      $images = file_create_url($entity->photo);
+      $arbitrary_array = array(
+        'path' => $images,
+        'alt' => 'Alternate Text',
+        'title' => 'Image Title',
+        'width' => '100px',
+        'height' => '100px',
+        'attributes' => array('class' => 'some-test-class'),
+
+      );
+
+      $rows[] = array(
+        'data' => array(
+          'id' => $entity->basic_id,
+          'name' => l($entity->name, 'address-book/book/' . $entity->basic_id),
+          'last_name' => l($entity->last_name, 'address-book/book/' . $entity->basic_id),
+          'phone' => l($entity->phone, 'address-book/book/' . $entity->basic_id),
+          'photo' => theme_image($arbitrary_array)
+
+        ),
+      );
+    }
+    $content['entity_table'] = array(
+      '#theme' => 'table',
+      '#rows' => $rows,
+      '#header' => array(
+        t('ID'),
+        t('Name'),
+        t('Last name'),
+        t('Phone'),
+        ('User photo')
+      ),
+    );
+  }
+  else {
+    $content[] = array(
+      '#type' => 'item',
+      '#markup' => t('No address_book entities currently exist.'),
+    );
+  }
+  return $content;
+}
+
+/**
+ * Provides a wrapper on the edit form to add a new entity.
+ */
+function address_book_add() {
+  $entity = entity_get_controller('address_book')->create();
+  return drupal_get_form('address_book_form', $entity);
+}
+
+/**
+ * @param $form
+ * @param $form_state
+ * @param $entity
+ * @return mixed
+ * Form function to create/edit an address_book entity.
+ */
+
+function address_book_form($form, &$form_state, $entity) {
+
+  if (arg(3) == 'edit') {
+    $fid = variable_get('fid', '');
+  }
+  else {
+    $fid = '';
+  }
+  $form['#parents'] = array();
+
+  $field = field_info_field('user_photo_field');
+  $instance = field_info_instance('address_book', 'user_photo_field', 'address_book');
+  $items = field_get_items('address_book', $entity, 'user_photo_field');
+  $form['user_photo_field'] = field_default_form('address_book', $entity, $field, $instance, LANGUAGE_NONE, $items, $form, $form_state);
+  $form['user_photo_field']['user_photo_field'][LANGUAGE_NONE][0]['value']['#required'] = TRUE;
+  $form['user_photo_field']['#weight'] = 99;
+  $form['name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('User name'),
+    '#required' => TRUE,
+    '#default_value' => $entity->name,
+  );
+  $form['last_name'] = array (
+    '#type' => 'textfield',
+    '#title' => t(' User last name'),
+    '#required' => TRUE,
+    '#default_value' => $entity->last_name,
+  );
+  $form['phone'] = array (
+    '#type' => 'textfield',
+    '#title' => t('Mobile Phone Number'),
+    '#required' => TRUE,
+    '#default_value' => $entity->phone,
+  );
+  $form['file'] = array (
+    '#type' => 'managed_file',
+    '#title' => 'User image ',
+    '#description' => 'Choose file with extension jpg, jpeg, png or gif',
+    '#default_value' => $fid,
+    '#upload_location' => 'public://entity_address_book/',
+  );
+  $form['address_book'] = array (
+    '#type' => 'value',
+    '#value' => $entity,
+  );
+  $form['submit'] = array (
+    '#type' => 'submit',
+    '#value' => t('Save'),
+    '#weight' => 100,
+  );
+  $form['delete'] = array (
+    '#type' => 'submit',
+    '#value' => t('Delete'),
+    '#submit' => array('address_book_edit_delete'),
+    '#weight' => 200,
+  );
+  field_attach_form('address_book', $entity, $form, $form_state);
+
+  return $form;
+}
+
+/**
+ * @param $form
+ * @param $form_state
+ * Validation handler for address_book_basic_add_form form.
+ */
+
+function address_book_form_validate($form, &$form_state) {
+  field_attach_form_validate('address_book', $form_state['values']['address_book'], $form, $form_state);
+
+  //Validation for image files
+  $validators = array (
+    'file_validate_is_image' => array(),
+    'file_validate_extensions' => array('png gif jpg jpeg'),
+    'file_validate_size' => array(1 * 1024 * 1024),
+  );
+
+  if ($file = file_save_upload('file', $validators, 'public://')) {
+    $form_state['values']['file'] = $file;
+  }
+  else {
+    form_set_error('file', t('File was not uploaded'));
+  }
+}
+
+
+/**
+ * @param $entity
+ * Use the controller to delete the entity.
+ */
+
+function address_book_delete($entity) {
+  entity_get_controller('address_book')->delete($entity);
+}
+
+/**
+ * @param $form
+ * @param $form_state
+ * Form deletion handler.
+ */
+
+function address_book_edit_delete($form, &$form_state) {
+  $entity = $form_state['values']['basic_entity'];
+  address_book_delete($entity);
+  drupal_set_message(t('The entity (ID %id) has been deleted', array('%id' => $entity->basic_id)));
+}
+
+/**
+ * Save the entity by calling the controller.
+ */
+function address_book_save($entity) {
+  return entity_get_controller('address_book')->save($entity);
+}
+
+
+/**
+ * @param $form
+ * @param $form_state
+ * Form submit handler
+ */
+
+function address_book_form_submit($form, &$form_state) {
+  $file = $form_state['values']['file'];
+  dsm($form_state['values']);
+  $file->status = FILE_STATUS_PERMANENT;
+  $saved_file = file_save($file);
+  $entity = $form_state['values']['address_book'];
+  $entity->name = $form_state['values']['name'];
+  $entity->last_name = $form_state['values']['last_name'];
+  $entity->phone = $form_state['values']['phone'];
+  $entity->photo = $saved_file->uri;
+  field_attach_submit('address_book', $entity, $form, $form_state);
+  $entity = address_book_save($entity);
+  variable_set('fid', $saved_file->fid);
+
+  $form_state['redirect'] = 'address-book/book/' . $entity->basic_id;
+}
+
+
+/**
+ * Interface AddressBookControllerInterface
+ */
+
+
+interface AddressBookControllerInterface extends DrupalEntityControllerInterface {
+
+  /**
+   * Create an entity.
+   */
+  public function create();
+
+  /**
+   * Save an entity.
+   *
+   * @param object $entity
+   *   The entity to save.
+   */
+  public function save($entity);
+
+  /**
+   * Delete an entity.
+   *
+   * @param object $entity
+   *   The entity to delete.
+   */
+  public function delete($entity);
+
+}
+
+/**
+ * Class AddressBookController
+ */
+
+class AddressBookController extends DrupalDefaultEntityController implements AddressBookControllerInterface {
+
+  /**
+   * Create and return a new address_book entity.
+   */
+  public function create() {
+    $entity = new stdClass();
+    $entity->type = 'address_book';
+    $entity->basic_id = 0;
+    $entity->bundle_type = 'first_example_bundle';
+    $entity->name = '';
+    $entity->last_name = '';
+    $entity->phone = '';
+    $entity->photo = '';
+    return $entity;
+  }
+
+  /**
+   * @param $entity
+   * @return mixed
+   * Saves the custom fields using drupal_write_record().
+   */
+
+  public function save($entity) {
+    if (empty($entity->basic_id)) {
+      $entity->created = time();
+    }
+    // Invoke hook_entity_presave().
+    module_invoke_all('entity_presave', $entity, 'address_book');
+    $primary_keys = $entity->basic_id ? 'basic_id' : array();
+    drupal_write_record('address_book', $entity, $primary_keys);
+    $invocation = 'entity_insert';
+    if (empty($primary_keys)) {
+      field_attach_insert('address_book', $entity);
+    }
+    else {
+      field_attach_update('address_book', $entity);
+      $invocation = 'entity_update';
+    }
+    // Invoke either hook_entity_update() or hook_entity_insert().
+    module_invoke_all($invocation, $entity, 'address_book');
+    return $entity;
+  }
+
+  /**
+   * @param $entity
+   *  Delete a single entity.
+   */
+
+  public function delete($entity) {
+    $this->deleteMultiple(array($entity));
+  }
+
+  /**
+   * @param $entities
+   * @throws \Exception
+   * Delete one or more entity_example_basic entities.
+   *
+   * Deletion is unfortunately not supported in the base
+   * DrupalDefaultEntityController class.
+   *
+   * @param array $entities
+   *   An array of entity IDs or a single numeric ID.
+   *
+   */
+
+
+  public function deleteMultiple($entities) {
+    $basic_ids = array();
+    if (!empty($entities)) {
+      $transaction = db_transaction();
+      try {
+        foreach ($entities as $entity) {
+          // Invoke hook_entity_delete().
+          module_invoke_all('entity_delete', $entity, 'entity_example_basic');
+          field_attach_delete('address_book', $entity);
+          $basic_ids[] = $entity->basic_id;
+        }
+        db_delete('address_book')
+          ->condition('basic_id', $basic_ids, 'IN')
+          ->execute();
+      } catch (Exception $e) {
+        $transaction->rollback();
+        watchdog_exception('address_book', $e);
+        throw $e;
+      }
+    }
+  }
+}
+
+/**
+ * @param $entity
+ * @return mixed
+ */
+function address_book_title($entity) {
+  return t('Address book entity @name', array('@name' => $entity->name));
+}
+
+/**
+ * @param $entity
+ * @param string $view_mode
+ * @return mixed
+ */
+function address_book_view($entity, $view_mode = 'tweaky') {
+
+  $entity_type = 'address_book';
+  $entity->content = array(
+    '#view_mode' => $view_mode,
+  );
+
+  field_attach_prepare_view($entity_type, array($entity->basic_id => $entity), $view_mode);
+  entity_prepare_view($entity_type, array($entity->basic_id => $entity));
+  $entity->content += field_attach_view($entity_type, $entity, $view_mode);
+
+  $image = file_create_url($entity->photo);
+  $arbitrary_array = array(
+    'path' => $image,
+    'alt' => 'Alternate Text',
+    'title' => 'Image Title',
+    'width' => '100px',
+    'height' => '100px',
+    'attributes' => array('class' => 'some-test-class'),
+
+  );
+
+  $entity->content['name'] = array(
+    '#type' => 'item',
+    '#title' => t('User name'),
+    '#markup' => $entity->name,
+  );
+  $entity->content['last_name'] = array(
+    '#type' => 'item',
+    '#title' => t('User Last name'),
+    '#markup' => $entity->last_name,
+  );
+  $entity->content['phone'] = array(
+    '#type' => 'item',
+    '#title' => t('Phone number'),
+    '#markup' => $entity->phone,
+  );
+  $entity->content['photo'] = array(
+    '#type' => 'item',
+    '#title' => t('User Photo'),
+    '#markup' => theme_image($arbitrary_array),
+  );
+
+  global $language;
+  $langcode = $language->language;
+
+  module_invoke_all('entity_view', $entity, $entity_type, $view_mode, $langcode);
+  drupal_alter(array(
+    'address_book_view',
+    'entity_view'
+  ), $entity->content, $entity_type);
+
+
+  return $entity->content;
+}
+
+/**
+ * @param $form
+ * @param $form_state
+ * @return mixed
+ */
+function address_book_table_form($form, &$form_state) {
+
+  $entities = db_select('address_book', 'ab')
+    ->fields('ab', array('basic_id'))
+    ->execute()
+    ->fetchAllAssoc('basic_id');
+  foreach ($entities as $result) {
+    $basic_ids[] = $result->basic_id;
+  }
+  $entity_objs = address_book_load_multiple($basic_ids);
+  $header = array(
+    'first_name' => t('User Name'),
+    'operations' => t('Operations')
+  );
+  $options = array();
+  foreach ($entity_objs as $entity_obj) {
+    $options[$entity_obj->basic_id] = array(
+      'first_name' => $entity_obj->name,
+      'operations' => l(t('edit'), 'address-book/book/' . $entity_obj->basic_id . '/edit'),
+    );
+  }
+  $form['table'] = array(
+    '#type' => 'tableselect',
+    '#header' => $header,
+    '#options' => $options,
+    '#empty' => t('No address book found'),
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Delete'),
+    '#submit' => array('address_book_table_form_submit')
+  );
+
+  return $form;
+}
+
+/**
+ * @param $form
+ * @param $form_state
+ */
+function address_book_table_form_submit($form, &$form_state) {
+
+  db_delete('address_book')
+    ->condition('basic_id', $form_state['values']['table'])
+    ->execute();
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function address_book_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'address_book') . '/views',
+  );
+}
+
+/**
+ * @return array
+ */
+function address_book_action_info() {
+  return array(
+    'address_book_remove_entity' => array(
+      'type' => 'address_book',
+      'label' => 'Remove address book',
+      'configurable' => FALSE,
+      'behavior' => array('deletes_property'),
+    ),
+  );
+}
+
+/**
+ * @param $entity
+ * @param array $context
+ */
+
+function address_book_remove_entity($entity, $context = array()) {
+  db_delete('address_book')
+    ->condition('basic_id', $entity->basic_id)
+    ->execute();
+}
