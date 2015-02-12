@@ -3,3 +3,5 @@ description = "Create address book use entity"
 version = "1.0"
 project = "Drupal learn"
 core = 7.x
+dependencies[] = views_bulk_operations
+dependencies[] = entity
