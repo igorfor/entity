@@ -222,7 +222,7 @@ function address_book_form($form, &$form_state, $entity) {
   $instance = field_info_instance('address_book', 'user_photo_field', 'address_book');
   $items = field_get_items('address_book', $entity, 'user_photo_field');
   $form['user_photo_field'] = field_default_form('address_book', $entity, $field, $instance, LANGUAGE_NONE, $items, $form, $form_state);
-  $form['user_photo_field']['user_photo_field'][LANGUAGE_NONE][0]['value']['#required'] = TRUE;
+  $form['user_photo_field']['user_photo_field'][LANGUAGE_NONE][0]['value']['#required'] = FALSE;
   $form['user_photo_field']['#weight'] = 99;
   $form['name'] = array(
     '#type' => 'textfield',
@@ -289,8 +289,13 @@ function address_book_form_validate($form, &$form_state) {
     $form_state['values']['file'] = $file;
   }
   else {
-    form_set_error('file', t('File was not uploaded'));
+
   }
+
+  if ($form_state['values']['phone'] != '' && !is_numeric($form_state['values']['phone'])) {
+    form_set_error($form_state['values']['phone'], t('Phone number field must be numeric'));
+  }
+
 }
 
 
