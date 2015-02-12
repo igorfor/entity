@@ -331,7 +331,6 @@ function address_book_save($entity) {
 
 function address_book_form_submit($form, &$form_state) {
   $file = $form_state['values']['file'];
-  dsm($form_state['values']);
   $file->status = FILE_STATUS_PERMANENT;
   $saved_file = file_save($file);
   $entity = $form_state['values']['address_book'];
