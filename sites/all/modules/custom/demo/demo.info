@@ -1,0 +1,5 @@
+name = Demo entity
+description = "Create notebook with entity"
+version = "1.0"
+project = "Drupal learn"
+core = 7.x
