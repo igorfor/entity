@@ -135,10 +135,6 @@ function address_book_views_data() {
  * Implements hook_views_default_views().
  */
 function address_book_views_default_views() {
-  return address_book_list_all_entities();
-}
-
-function address_book_list_all_entities() {
   $view = new view();
   $view->name = 'address_book_entity';
   $view->description = '';
@@ -257,5 +253,7 @@ function address_book_list_all_entities() {
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
   $handler->display->display_options['path'] = 'address-book-entity';
+  $views[$view->name] = $view;
+  return $views;
 
 }
