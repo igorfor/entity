@@ -252,7 +252,7 @@ function address_book_views_default_views() {
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
-  $handler->display->display_options['path'] = 'address-book-entity';
+  $handler->display->display_options['path'] = 'address_book/list';
   $views[$view->name] = $view;
   return $views;
 
