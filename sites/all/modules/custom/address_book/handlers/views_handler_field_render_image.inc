@@ -3,9 +3,6 @@
 /**
  * @file
  * Custom views handler definition.
- *
- * Place this code in
- * /sites/all/[custom_module_name]/includes/views_handler_my_custom_field.inc
  */
 
 /**
