@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="8f1243dc-4276-4926-b1a1-319d229cf734" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sites/all/modules/custom/address_book/address_book.module" afterPath="$PROJECT_DIR$/sites/all/modules/custom/address_book/address_book.module" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sites/all/modules/custom/address_book/views/address_book.views.inc" afterPath="$PROJECT_DIR$/sites/all/modules/custom/address_book/views/address_book.views.inc" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="entity.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -29,11 +27,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="address_book.module" pinned="false" current-in-tab="false">
+      <file leaf-file-name="address_book.module" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/address_book/address_book.module">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-7.418182" vertical-offset="918" max-vertical-offset="9350">
-              <caret line="78" column="31" selection-start-line="78" selection-start-column="31" selection-end-line="78" selection-end-column="31" />
+            <state vertical-scroll-proportion="0.33333334" vertical-offset="4007" max-vertical-offset="9350">
+              <caret line="253" column="22" selection-start-line="253" selection-start-column="16" selection-end-line="253" selection-end-column="22" />
               <folding />
             </state>
           </provider>
@@ -49,10 +47,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="address_book.views.inc" pinned="false" current-in-tab="true">
+      <file leaf-file-name="address_book.views.inc" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/address_book/views/address_book.views.inc">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7947311" vertical-offset="3339" max-vertical-offset="4250">
+            <state vertical-scroll-proportion="-27.846153" vertical-offset="3339" max-vertical-offset="4250">
               <caret line="239" column="81" selection-start-line="239" selection-start-column="81" selection-end-line="239" selection-end-column="81" />
               <folding />
             </state>
@@ -109,8 +107,8 @@
         <option value="$PROJECT_DIR$/sites/all/modules/custom/address_book/address_book.info" />
         <option value="$PROJECT_DIR$/sites/all/modules/custom/address_book/handlers/views_handler_field_render_image.inc" />
         <option value="$USER_HOME$/Desktop/style.css" />
-        <option value="$PROJECT_DIR$/sites/all/modules/custom/address_book/address_book.module" />
         <option value="$PROJECT_DIR$/sites/all/modules/custom/address_book/views/address_book.views.inc" />
+        <option value="$PROJECT_DIR$/sites/all/modules/custom/address_book/address_book.module" />
       </list>
     </option>
   </component>
@@ -440,6 +438,22 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/Desktop/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="175655" max-vertical-offset="176630">
+          <caret line="10346" column="24" selection-start-line="10346" selection-start-column="24" selection-end-line="10346" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/address_book/views/address_book.views.inc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-27.846153" vertical-offset="3339" max-vertical-offset="4250">
+          <caret line="239" column="81" selection-start-line="239" selection-start-column="81" selection-end-line="239" selection-end-column="81" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/address_book/handlers/views_handler_field_render_image.inc">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-16.346153" vertical-offset="0" max-vertical-offset="1054">
@@ -450,26 +464,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/Desktop/style.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="175655" max-vertical-offset="176630">
-          <caret line="10346" column="24" selection-start-line="10346" selection-start-column="24" selection-end-line="10346" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/address_book/address_book.module">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.418182" vertical-offset="918" max-vertical-offset="9350">
-          <caret line="78" column="31" selection-start-line="78" selection-start-column="31" selection-end-line="78" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/address_book/views/address_book.views.inc">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7947311" vertical-offset="3339" max-vertical-offset="4250">
-          <caret line="239" column="81" selection-start-line="239" selection-start-column="81" selection-end-line="239" selection-end-column="81" />
+        <state vertical-scroll-proportion="0.33333334" vertical-offset="4007" max-vertical-offset="9350">
+          <caret line="253" column="22" selection-start-line="253" selection-start-column="16" selection-end-line="253" selection-end-column="22" />
           <folding />
         </state>
       </provider>

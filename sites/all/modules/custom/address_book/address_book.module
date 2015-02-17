@@ -96,7 +96,7 @@ function address_book_menu() {
     'title' => 'Address book list',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-  $items['admin/structure/address_book/manage/add'] = array(
+  $items['admin/structure/address-book/list/add'] = array(
     'title' => 'Add an Address book Entity',
     'page callback' => 'address_book_add',
     'access arguments' => array('create address_book entities'),
@@ -135,7 +135,7 @@ function address_book_info_page() {
     '#markup' => t('The entity example provides a simple example entity.'),
   );
   if (user_access('administer address_book entities')) {
-    $content['preface']['#markup'] = t('You can administer these and add fields and change the view !link.', array('!link' => l(t('here'), 'admin/structure/address_book/manage')));
+    $content['preface']['#markup'] = t('You can administer these and add fields and change the view !link.', array('!link' => l(t('here'), 'admin/structure/address-book/list')));
   }
   $content['table'] = address_book_list_entities();
 
