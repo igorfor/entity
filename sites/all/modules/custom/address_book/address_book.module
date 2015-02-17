@@ -199,7 +199,17 @@ function address_book_list_entities() {
  * Provides a wrapper on the edit form to add a new entity.
  */
 function address_book_add() {
-  $entity = entity_get_controller('address_book')->create();
+  $entity = array(
+    'type' => 'address_book',
+    'basic_id' => 0,
+    'bundle_type' => 'first_example_bundle',
+    'name' => '',
+    'last_name' => '',
+    'phone' => '',
+    'photo' => '',
+    'created' => REQUEST_TIME,
+  );
+  $entity = entity_create('address_book', $entity);
   return drupal_get_form('address_book_form', $entity);
 }
 
@@ -302,7 +312,7 @@ function address_book_form_validate($form, &$form_state) {
  */
 
 function address_book_delete($entity) {
-  entity_get_controller('address_book')->delete($entity);
+  entity_delete('address_book', entity_id('address_book' ,$entity));
 }
 
 /**
