@@ -42,16 +42,12 @@ class views_handler_field_render_image extends views_handler_field {
       ->fields('ab', array('photo'))
       ->execute();
     foreach ($uris as $uri) {
-      $images = file_create_url($uri->photo);
-      $arbitrary_array = array(
-        'path' => $images,
-        'alt' => 'Alternate Text',
-        'title' => 'Image Title',
-        'width' => '100px',
-        'height' => '100px',
-        'attributes' => array('class' => 'some-img', 'id' => 'my-img'),
+      $image = array(
+        'style_name' => 'thumbnail',
+        'path' => $uri->photo, //
       );
     }
-    return theme_image($arbitrary_array);
+
+    return theme('image_style', $image);
   }
 }

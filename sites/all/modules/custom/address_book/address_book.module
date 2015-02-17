@@ -152,16 +152,11 @@ function address_book_list_entities() {
   $entities = address_book_load_multiple();
   if (!empty($entities)) {
     foreach ($entities as $entity) {
-      $images = file_create_url($entity->photo);
-      $arbitrary_array = array(
-        'path' => $images,
-        'alt' => 'Alternate Text',
-        'title' => 'Image Title',
-        'width' => '100px',
-        'height' => '100px',
-        'attributes' => array('class' => 'some-test-class'),
-
+      $image = array(
+        'style_name' => 'thumbnail',
+        'path' => $entity->photo, //
       );
+
 
       $rows[] = array(
         'data' => array(
@@ -169,7 +164,7 @@ function address_book_list_entities() {
           'name' => l($entity->name, 'address-book/book/' . $entity->basic_id),
           'last_name' => l($entity->last_name, 'address-book/book/' . $entity->basic_id),
           'phone' => l($entity->phone, 'address-book/book/' . $entity->basic_id),
-          'photo' => theme_image($arbitrary_array)
+          'photo' => theme('image_style', $image)
 
         ),
       );
@@ -412,16 +407,11 @@ function address_book_view($entity, $view_mode = 'tweaky') {
   entity_prepare_view($entity_type, array($entity->basic_id => $entity));
   $entity->content += field_attach_view($entity_type, $entity, $view_mode);
 
-  $image = file_create_url($entity->photo);
-  $arbitrary_array = array(
-    'path' => $image,
-    'alt' => 'Alternate Text',
-    'title' => 'Image Title',
-    'width' => '100px',
-    'height' => '100px',
-    'attributes' => array('class' => 'some-test-class'),
-
+  $image = array(
+    'style_name' => 'thumbnail',
+    'path' => $entity->photo,
   );
+
 
   $entity->content['name'] = array(
     '#type' => 'item',
@@ -441,7 +431,7 @@ function address_book_view($entity, $view_mode = 'tweaky') {
   $entity->content['photo'] = array(
     '#type' => 'item',
     '#title' => t('User Photo'),
-    '#markup' => theme_image($arbitrary_array),
+    '#markup' => theme('image_style', $image),
   );
 
   global $language;
