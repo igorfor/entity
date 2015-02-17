@@ -23,7 +23,7 @@ function address_book_entity_info() {
       'address_book' => array(
         'label' => 'First bundle',
         'admin' => array(
-          'path' => 'admin/structure/address_book/manage',
+          'path' => 'admin/structure/address-book/list',
           'access arguments' => array('administer address_book entities'),
         ),
       ),
@@ -86,23 +86,23 @@ function address_book_menu() {
     'page arguments' => array('address_book_table_form'),
     'access arguments' => array('view any address books entity'),
   );
-  $items['admin/structure/address_book/manage'] = array(
+  $items['admin/structure/address-book/list'] = array(
     'title' => 'Administer address_book entity type',
     'page callback' => 'address_book_list_entities',
     'access arguments' => array('administer address_book entities'),
+    'type' => MENU_NORMAL_ITEM,
   );
-
+  $items['admin/structure/address-book/list/tab'] = array(
+    'title' => 'Address book list',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
   $items['admin/structure/address_book/manage/add'] = array(
     'title' => 'Add an Address book Entity',
     'page callback' => 'address_book_add',
     'access arguments' => array('create address_book entities'),
     'type' => MENU_LOCAL_ACTION,
   );
-  $items['admin/structure/entity_example_basic/manage/list'] = array(
-    'title' => 'List',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-  $items['address-book/book/%address_book'] = array(
+ $items['address-book/book/%address_book'] = array(
     'title callback' => 'address_book_title',
     'title arguments' => array(2),
     'page callback' => 'address_book_view',
