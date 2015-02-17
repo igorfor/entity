@@ -288,6 +288,11 @@ function address_book_form_validate($form, &$form_state) {
   if ($file = file_save_upload('file', $validators, 'public://')) {
     $form_state['values']['file'] = $file;
   }
+  $regex = '/^(\d[\s-]?)?[\(\[\s-]{0,2}?\d{3}[\)\]\s-]{0,2}?\d{3}[\s-]?\d{4}$/i';
+
+  if(!is_numeric($form_state['values']['phone']) && !preg_match($regex, $form_state['values']['phone'])){
+    form_set_error($form_state['values']['phone'], t('Enter valid phone number'));
+  }
 }
 
 

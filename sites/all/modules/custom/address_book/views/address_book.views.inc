@@ -119,12 +119,7 @@ function address_book_views_data() {
       'handler' => 'views_handler_field',
     ),
 
-    'filter' => array(
-      'handler' => 'views_handler_field_filter_format_name',
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
+
   );
 
 
@@ -252,8 +247,13 @@ function address_book_views_default_views() {
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
-  $handler->display->display_options['path'] = 'address_book/list';
+  $handler->display->display_options['path'] = 'address-book-entity';
   $views[$view->name] = $view;
   return $views;
+
+}
+
+function address_book_views_data_alter(&$data) {
+  dsm($data);
 
 }
