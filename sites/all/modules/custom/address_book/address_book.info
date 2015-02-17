@@ -5,3 +5,4 @@ project = "Drupal learn"
 core = 7.x
 dependencies[] = views_bulk_operations
 dependencies[] = entity
+files[] = handlers/views_handler_field_render_image.inc

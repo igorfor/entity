@@ -112,7 +112,7 @@ function address_book_views_data() {
     'field' => array(
       'field' => 'photo',
       'group' => t('Address Book'),
-      'handler' => 'views_handler_field',
+      'handler' => 'views_handler_field_render_image',
       'click sortable' => TRUE,
     ),
     'argument' => array(
@@ -188,22 +188,12 @@ function address_book_views_default_views() {
       'empty_column' => 0,
     ),
   );
-  /* Relationship: Field: User photo (user_photo_field:fid) */
-  $handler->display->display_options['relationships']['user_photo_field_fid']['id'] = 'user_photo_field_fid';
-  $handler->display->display_options['relationships']['user_photo_field_fid']['table'] = 'field_data_user_photo_field';
-  $handler->display->display_options['relationships']['user_photo_field_fid']['field'] = 'user_photo_field_fid';
-  /* Relationship: Field: User photo (user_photo_field:fid) */
-  $handler->display->display_options['relationships']['user_photo_field_fid_1']['id'] = 'user_photo_field_fid_1';
-  $handler->display->display_options['relationships']['user_photo_field_fid_1']['table'] = 'field_data_user_photo_field';
-  $handler->display->display_options['relationships']['user_photo_field_fid_1']['field'] = 'user_photo_field_fid';
-  /* Relationship: Field: User photo (user_photo_field:fid) */
-  $handler->display->display_options['relationships']['user_photo_field_fid_2']['id'] = 'user_photo_field_fid_2';
-  $handler->display->display_options['relationships']['user_photo_field_fid_2']['table'] = 'field_data_user_photo_field';
-  $handler->display->display_options['relationships']['user_photo_field_fid_2']['field'] = 'user_photo_field_fid';
   /* Field: Address Book: User name */
   $handler->display->display_options['fields']['name']['id'] = 'name';
   $handler->display->display_options['fields']['name']['table'] = 'address_book';
   $handler->display->display_options['fields']['name']['field'] = 'name';
+  $handler->display->display_options['fields']['name']['label'] = '';
+  $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
   /* Field: Address Book: User last name */
   $handler->display->display_options['fields']['last_name']['id'] = 'last_name';
   $handler->display->display_options['fields']['last_name']['table'] = 'address_book';
@@ -226,6 +216,7 @@ function address_book_views_default_views() {
   $handler->display->display_options['fields']['photo']['id'] = 'photo';
   $handler->display->display_options['fields']['photo']['table'] = 'address_book';
   $handler->display->display_options['fields']['photo']['field'] = 'photo';
+  $handler->display->display_options['fields']['photo']['element_label_colon'] = FALSE;
   /* Field: Bulk operations: Address Book */
   $handler->display->display_options['fields']['views_bulk_operations_1']['id'] = 'views_bulk_operations_1';
   $handler->display->display_options['fields']['views_bulk_operations_1']['table'] = 'address_book';
@@ -244,16 +235,10 @@ function address_book_views_default_views() {
       'label' => '',
     ),
   );
-
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
-  $handler->display->display_options['path'] = 'address-book-entity';
+  $handler->display->display_options['path'] = 'address-book/list';
+
   $views[$view->name] = $view;
   return $views;
-
-}
-
-function address_book_views_data_alter(&$data) {
-  dsm($data);
-
 }
